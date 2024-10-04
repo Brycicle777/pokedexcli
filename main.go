@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"internal/mapcommands"
+	"internal/pokecache"
 	"os"
 )
 
@@ -61,6 +62,7 @@ func main() {
 	cfg := &mapcommands.Config{}
 	commands := getCommands()
 	scanner := bufio.NewScanner(os.Stdin)
+	pokecache.TestFunc()
 
 	for {
 		fmt.Print("pokedex > ")
