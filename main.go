@@ -61,10 +61,9 @@ func commandExit(*pokecache.Cache, *mapcommands.Config) error {
 
 func main() {
 	cfg := &mapcommands.Config{}
-	c := pokecache.NewCache(5 * time.Minute)
+	c := pokecache.NewCache(5 * time.Second)
 	commands := getCommands()
 	scanner := bufio.NewScanner(os.Stdin)
-	pokecache.TestFunc()
 
 	for {
 		fmt.Print("pokedex > ")

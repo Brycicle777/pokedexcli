@@ -1,7 +1,6 @@
 package pokecache
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -64,8 +63,4 @@ func (c *Cache) reapLoop() {
 			c.mutex.Unlock()
 		}
 	}
-}
-
-func TestFunc() {
-	fmt.Println("Imported pokecache")
 }
