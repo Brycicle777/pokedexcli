@@ -6,12 +6,13 @@ import (
 	"internal/mapcommands"
 	"internal/pokecache"
 	"os"
+	"time"
 )
 
 type cliCommand struct {
+	callback    func(*pokecache.Cache, *mapcommands.Config) error
 	name        string
 	description string
-	callback    func(*mapcommands.Config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -39,7 +40,7 @@ func getCommands() map[string]cliCommand {
 	}
 }
 
-func commandHelp(*mapcommands.Config) error {
+func commandHelp(*pokecache.Cache, *mapcommands.Config) error {
 	commands := getCommands()
 	fmt.Println("")
 	fmt.Println("Welcome to the Pokedex!")
@@ -52,7 +53,7 @@ func commandHelp(*mapcommands.Config) error {
 	return nil
 }
 
-func commandExit(*mapcommands.Config) error {
+func commandExit(*pokecache.Cache, *mapcommands.Config) error {
 	fmt.Println("Exiting program...")
 	os.Exit(0)
 	return nil
@@ -60,6 +61,7 @@ func commandExit(*mapcommands.Config) error {
 
 func main() {
 	cfg := &mapcommands.Config{}
+	c := pokecache.NewCache(5 * time.Minute)
 	commands := getCommands()
 	scanner := bufio.NewScanner(os.Stdin)
 	pokecache.TestFunc()
@@ -75,7 +77,7 @@ func main() {
 		if scanner.Scan() {
 			input := scanner.Text()
 			if cmd, exists := commands[input]; exists {
-				err := cmd.callback(cfg)
+				err := cmd.callback(c, cfg)
 				if err != nil {
 					fmt.Println("Error executing command:", err)
 				}
