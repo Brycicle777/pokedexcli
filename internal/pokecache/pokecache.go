@@ -18,10 +18,12 @@ type cacheEntry struct {
 }
 
 func NewCache(interval time.Duration) *Cache {
-	return &Cache{
+	newCache := &Cache{
 		cacheMap: make(map[string]cacheEntry),
 		interval: interval,
 	}
+	go newCache.reapLoop()
+	return newCache
 }
 
 func (c *Cache) Add(key string, val []byte) {
@@ -54,7 +56,7 @@ func (c *Cache) reapLoop() {
 
 			now := time.Now()
 			for key, entry := range c.cacheMap {
-				if now.Sub(entry.createdAt) > c.interval {
+				if now.Sub(entry.createdAt) >= c.interval {
 					delete(c.cacheMap, key)
 				}
 			}
