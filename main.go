@@ -6,11 +6,12 @@ import (
 	"internal/mapcommands"
 	"internal/pokecache"
 	"os"
+	"strings"
 	"time"
 )
 
 type cliCommand struct {
-	callback    func(*pokecache.Cache, *mapcommands.Config) error
+	callback    func(string, *pokecache.Cache, *mapcommands.Config) error
 	name        string
 	description string
 }
@@ -37,10 +38,15 @@ func getCommands() map[string]cliCommand {
 			description: "Displays the previous 20 locations",
 			callback:    mapcommands.CommandMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explores the specified area",
+			callback:    mapcommands.CommandExplore,
+		},
 	}
 }
 
-func commandHelp(*pokecache.Cache, *mapcommands.Config) error {
+func commandHelp(string, *pokecache.Cache, *mapcommands.Config) error {
 	commands := getCommands()
 	fmt.Println("")
 	fmt.Println("Welcome to the Pokedex!")
@@ -53,7 +59,7 @@ func commandHelp(*pokecache.Cache, *mapcommands.Config) error {
 	return nil
 }
 
-func commandExit(*pokecache.Cache, *mapcommands.Config) error {
+func commandExit(string, *pokecache.Cache, *mapcommands.Config) error {
 	fmt.Println("Exiting program...")
 	os.Exit(0)
 	return nil
@@ -75,8 +81,17 @@ func main() {
 
 		if scanner.Scan() {
 			input := scanner.Text()
-			if cmd, exists := commands[input]; exists {
-				err := cmd.callback(c, cfg)
+			splitInput := strings.Split(input, " ")
+			command := ""
+			parameter := ""
+			if len(splitInput) > 1 {
+				command = splitInput[0]
+				parameter = splitInput[1]
+			} else {
+				command = splitInput[0]
+			}
+			if cmd, exists := commands[command]; exists {
+				err := cmd.callback(parameter, c, cfg)
 				if err != nil {
 					fmt.Println("Error executing command:", err)
 				}
