@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"internal/mapcommands"
 	"internal/pokecache"
+	"internal/pokecollect"
 	"os"
 	"strings"
 	"time"
@@ -42,6 +43,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Explores the specified area",
 			callback:    mapcommands.CommandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Attempts to catch the specified pokemon",
+			callback:    pokecollect.CommandCatch,
 		},
 	}
 }
