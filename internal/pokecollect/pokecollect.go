@@ -94,3 +94,16 @@ func CommandInspect(n string, c *pokecache.Cache, cfg *mapcommands.Config) error
 
 	return nil
 }
+
+func CommandPokedex(n string, c *pokecache.Cache, cfg *mapcommands.Config) error {
+	if len(Pokedex) > 0 {
+		fmt.Println("Your pokedex:")
+		for _, pokemon := range Pokedex {
+			fmt.Printf("\t- %s\n", pokemon.Name)
+		}
+	} else {
+		fmt.Println("You haven't caught any Pokemon!")
+	}
+
+	return nil
+}
