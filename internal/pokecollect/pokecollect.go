@@ -11,8 +11,21 @@ import (
 )
 
 type Pokemon struct {
-	Name           string `json:"name"`
-	BaseExperience int    `json:"base_experience"`
+	Name  string `json:"name"`
+	Stats []struct {
+		Stat struct {
+			Name string `json:"name"`
+		} `json:"stat"`
+		BaseStatValue int `json:"base_stat"`
+	} `json:"stats"`
+	Types []struct {
+		Type struct {
+			Name string `json:"name"`
+		} `json:"type"`
+	} `json:"types"`
+	BaseExperience int `json:"base_experience"`
+	Height         int `json:"height"`
+	Weight         int `json:"weight"`
 }
 
 var Pokedex = make(map[string]Pokemon)
@@ -56,6 +69,27 @@ func CommandCatch(n string, c *pokecache.Cache, cfg *mapcommands.Config) error {
 		Pokedex[pokemonToCatch.Name] = pokemonToCatch
 	} else {
 		fmt.Printf("%s escaped!\n", pokemonToCatch.Name)
+	}
+
+	return nil
+}
+
+func CommandInspect(n string, c *pokecache.Cache, cfg *mapcommands.Config) error {
+	pokemon, found := Pokedex[n]
+	if found {
+		fmt.Printf("Name: %s\n", pokemon.Name)
+		fmt.Printf("Height: %v\n", pokemon.Height)
+		fmt.Printf("Weight: %v\n", pokemon.Weight)
+		fmt.Println("Stats:")
+		for _, stat := range pokemon.Stats {
+			fmt.Printf("\t-%s: %v\n", stat.Stat.Name, stat.BaseStatValue)
+		}
+		fmt.Println("Types:")
+		for _, pokemonType := range pokemon.Types {
+			fmt.Printf("\t- %s\n", pokemonType.Type.Name)
+		}
+	} else {
+		fmt.Printf("Pokemon %s not found in collection\n", n)
 	}
 
 	return nil
